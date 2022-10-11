@@ -10,7 +10,7 @@ from brainflow.data_filter import DataFilter, FilterTypes, WindowFunctions, Detr
 class BrainData:
     def __init__(self, input_source, bands, channels, window_ms=400):
         self.input_source = input_source
-        self.sampling_rate = board_shim.get_sampling_rate(self.input_source.board_id)
+        self.sampling_rate = BoardShim.get_sampling_rate(self.input_source.board_id)
         self.sampling_power_two = DataFilter.get_nearest_power_of_two(self.sampling_rate)
         self.bands = bands
         self.channels = channels
@@ -31,12 +31,12 @@ class BrainData:
     def get_features(self):
 
         features = []
-        data = self.get_recent_data()
+        data = self.__get_recent_data()
 
         for ch in self.channels:
             band_powers = []
             ch_data = data[ch]
-            __clean_data(ch_data)
+            self.__clean_data(ch_data)
             psd = DataFilter.get_psd_welch(ch_data, self.sampling_power_two,
                 self.sampling_power_two // 2, self.sampling_rate, WindowFunctions.BLACKMAN_HARRIS.value)
 

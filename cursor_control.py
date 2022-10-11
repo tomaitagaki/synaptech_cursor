@@ -17,7 +17,8 @@ def main():
     num_moves = (timeout_seconds * 1000) // input_speed
 
     # initialize headset instance
-    input_source = HeadSet('/dev/cu.usbserial-DM0258JS')
+    # input_source = HeadSet('/dev/cu.usbserial-DM0258JS')
+    input_source = HeadSet('/dev/cu.usbserial-DM03GSKK')
 
     # start session
     input_source.init_board()
