@@ -2,7 +2,7 @@ from band_config import Band
 from hardware_interface import HeadSet
 
 from brainflow.board_shim import BoardShim, BoardIds
-from brainflow.data_filter import DataFilter, FilterTypes, WindowFunctions, DetrendOperations
+from brainflow.data_filter import DataFilter, FilterTypes, WindowOperations, DetrendOperations
 
 # C3 (left motor) index 2 (channel 3)
 # C4 (right motor) index 3 (channel 4)
@@ -38,7 +38,7 @@ class BrainData:
             ch_data = data[ch]
             self.__clean_data(ch_data)
             psd = DataFilter.get_psd_welch(ch_data, self.sampling_power_two,
-                self.sampling_power_two // 2, self.sampling_rate, WindowFunctions.BLACKMAN_HARRIS.value)
+                self.sampling_power_two // 2, self.sampling_rate, WindowOperations.BLACKMAN_HARRIS.value)
 
             for band in self.bands:
                 band_powers.append(DataFilter.get_band_power(psd, band.value.freq_start, band.value.freq_stop))

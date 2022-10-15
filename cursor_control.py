@@ -18,16 +18,16 @@ def main():
 
     # initialize headset instance
     # input_source = HeadSet('/dev/cu.usbserial-DM0258JS')
-    input_source = HeadSet('/dev/cu.usbserial-DM03GSKK')
+    # input_source = HeadSet('/dev/cu.usbserial-DM03GSKK')
 
     # start session
-    input_source.init_board()
-    input_source.start_session() # can also end_session()
+    # input_source.init_board()
+    # input_source.start_session() # can also end_session()
 
-    brain_data = BrainData(input_source, [Band.MU, Band.BETA], [3, 4])
+    # brain_data = BrainData(input_source, [Band.MU, Band.BETA], [3, 4])
 
     interface: View = PyGameView()
-    interface.initialize(pygame_view.DEFAULT_SETUP)
+    interface.initialize(pygame_view.NEW_SETUP)
     
     # Problem with this implementation:
     # the window will only close after an entire trial has finished.
@@ -37,7 +37,7 @@ def main():
         # This is a short demonstration of the different states of the interface
         
         for move in range(num_moves):
-            features = brain_data.get_features()
+            # features = brain_data.get_features()
             # TODO: features -> movement (model.py)
             # movement -> absolute cursor position
             interface.move(260, 260) # new cursor position

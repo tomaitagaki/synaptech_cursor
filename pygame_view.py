@@ -16,6 +16,14 @@ DEFAULT_SETUP = ViewSetup(
     cursor_radius=5
 )
 
+NEW_SETUP = ViewSetup(
+    window_shape=(600, 600),
+    targets=[(0, 200), (0, 400), (200, 0), (400, 0), (200, 590), (400, 590), (590, 200), (590, 400)],
+    target_shape=(10, 10),
+    cursor_pos=(300, 300),
+    cursor_radius=5,
+)
+
 
 class Target(pygame.sprite.Sprite):
     """
