@@ -15,11 +15,14 @@ class BrainData:
         self.bands = bands
         self.channels = channels
 
-        self.window = int(window_ms / 1000 * self.sampling_rate)
+        # TODO: window can't be processed in PSD if 400ms (100 samples)
+        # self.window = int(window_ms / 1000 * self.sampling_rate)
+        self.window = 1000
 
     def __get_recent_data(self):
         # Get data from brainflow
         data = self.input_source.board.get_current_board_data(self.window)
+        return data
 
     def __clean_data(self, data):
         # what is ch_data --> do we want to pass this in or have this done automatically
@@ -36,6 +39,7 @@ class BrainData:
         for ch in self.channels:
             band_powers = []
             ch_data = data[ch]
+            # print('ch_data', len(ch_data))
             self.__clean_data(ch_data)
             psd = DataFilter.get_psd_welch(ch_data, self.sampling_power_two,
                 self.sampling_power_two // 2, self.sampling_rate, WindowFunctions.BLACKMAN_HARRIS.value)
@@ -44,4 +48,4 @@ class BrainData:
                 band_powers.append(DataFilter.get_band_power(psd, band.value.freq_start, band.value.freq_stop))
             features.append(band_powers)
         
-        return band_powers # [[3-mu, 3-beta], [4-mu, 4-beta]]
+        return features # [[3-mu, 3-beta], [4-mu, 4-beta]]

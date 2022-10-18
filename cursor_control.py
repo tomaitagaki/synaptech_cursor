@@ -26,26 +26,41 @@ def main():
 
     brain_data = BrainData(input_source, [Band.MU, Band.BETA], [3, 4])
 
-    interface: View = PyGameView()
-    interface.initialize(pygame_view.DEFAULT_SETUP)
+    time.sleep(4)
+
+    # interface: View = PyGameView()
+    # interface.initialize(pygame_view.DEFAULT_SETUP)
     
     # Problem with this implementation:
     # the window will only close after an entire trial has finished.
     # Closing it earlier requires a keyboard interrupt.
-    while interface.update():
-        # TODO: code to run trial
-        # This is a short demonstration of the different states of the interface
+    # while interface.update():
+    # while True:
+    #     # TODO: code to run trial
+    #     # This is a short demonstration of the different states of the interface
         
-        for move in range(num_moves):
-            features = brain_data.get_features()
-            # TODO: features -> movement (model.py)
-            # movement -> absolute cursor position
-            interface.move(260, 260) # new cursor position
-            time.sleep(input_speed / 1000) # time later
-        interface.clear()
-        # update decoder (parameter: resulting cursor position, index of target)
-        time.sleep(2) # time in between trials
-        interface.restart()
+    #     for move in range(num_moves):
+    #         features = brain_data.get_features()
+    #         print(features)
+    #         # TODO: features -> movement (model.py)
+    #         # movement -> absolute cursor position
+    #         # interface.move(260, 260) # new cursor position
+    #         time.sleep(input_speed / 1000) # time later
+    #     # interface.clear()
+    #     # update decoder (parameter: resulting cursor position, index of target)
+    #     time.sleep(2) # time in between trials
+        # interface.restart()
+
+    counter = 0
+    print('mu_r', 'be_r', 'mu_l', 'be_l') # r refers to right electrode
+    while counter < 200:
+        counter += 1
+        features = brain_data.get_features()
+        print(features[0][0], features[0][1], features[1][0], features[1][1])
+        time.sleep(0.05)
 
 if __name__ == "__main__":
     main()
+
+# TODO:
+# neutral, right up, left up, right down, left down
