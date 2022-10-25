@@ -19,6 +19,10 @@ pygame.init()
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 800
 
+#Target size constants
+RECTANGLE_LONG_SIDE = SCREEN_HEIGHT / 4
+RECTANGLE_SHORT_SIDE = RECTANGLE_LONG_SIDE / 2
+
 #Class for the targets
 class Target(pygame.sprite.Sprite):
     def __init__(self):
@@ -29,6 +33,7 @@ class Target(pygame.sprite.Sprite):
 
 # Define a Player object by extending pygame.sprite.Sprite
 # The surface drawn on the screen is now an attribute of 'player'
+#Player is the cursor
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -41,100 +46,48 @@ class Player(pygame.sprite.Sprite):
             )
         )
 
-
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 #Game loop
 running = True
 
-#defining targets and sizes
 targets = []
-for i in range(8):
+
+#Function to define targets
+#Inputs are x and y of top left, and width and height dimensions
+def addTarget(x, y, width, height):
     targets.append(Target())
-    if i == 0 or i == 1 or i == 4 or i == 5:
-        targets[i].surf = pygame.Surface((200,75))
-    else:
-        targets[i].surf = pygame.Surface((75,200))
-
-#Defining positions of all targets
-#I'm sure there's a more efficient way of doing this but I don't know it right now
-
-#Target 1
-targets[0].rect = targets[0].surf.get_rect(
-    midtop=(
-        233,0
+    targets[-1].surf = pygame.Surface((width, height))
+    targets[-1].rect = targets[-1].surf.get_rect(
+        topleft=(
+            x, y
+        )
     )
-)
 
-#Target 2
-targets[1].rect = targets[1].surf.get_rect(
-    midtop=(
-        800 - 233,0
-    )
-)
+#Defining all of the targets
+addTarget((SCREEN_WIDTH - RECTANGLE_LONG_SIDE * 2)/3, 0, RECTANGLE_LONG_SIDE, RECTANGLE_SHORT_SIDE)
+addTarget(SCREEN_WIDTH - (SCREEN_WIDTH - RECTANGLE_LONG_SIDE * 2)/3 - RECTANGLE_LONG_SIDE, 0, RECTANGLE_LONG_SIDE, RECTANGLE_SHORT_SIDE)
 
-#Target 3
-targets[2].rect = targets[2].surf.get_rect(
-    midright=(
-        800, 166
-    )
-)
+addTarget(SCREEN_WIDTH - RECTANGLE_SHORT_SIDE, (SCREEN_HEIGHT - RECTANGLE_LONG_SIDE * 2)/3, RECTANGLE_SHORT_SIDE, RECTANGLE_LONG_SIDE)
+addTarget(SCREEN_WIDTH - RECTANGLE_SHORT_SIDE, SCREEN_HEIGHT - (SCREEN_HEIGHT - RECTANGLE_LONG_SIDE * 2)/3 - RECTANGLE_LONG_SIDE, RECTANGLE_SHORT_SIDE, RECTANGLE_LONG_SIDE)
 
-#Target 4
-targets[3].rect = targets[3].surf.get_rect(
-    midright=(
-        800,600 - 166
-    )
-)
+addTarget(SCREEN_WIDTH - (SCREEN_WIDTH - RECTANGLE_LONG_SIDE * 2)/3 - RECTANGLE_LONG_SIDE, SCREEN_HEIGHT - RECTANGLE_SHORT_SIDE, RECTANGLE_LONG_SIDE, RECTANGLE_SHORT_SIDE)
+addTarget((SCREEN_WIDTH - RECTANGLE_LONG_SIDE * 2)/3, SCREEN_HEIGHT - RECTANGLE_SHORT_SIDE, RECTANGLE_LONG_SIDE, RECTANGLE_SHORT_SIDE)
 
-#Target 5
-targets[4].rect = targets[4].surf.get_rect(
-    midbottom=(
-        800 - 233,600
-    )
-)
-
-#Target 6
-targets[5].rect = targets[5].surf.get_rect(
-    midbottom=(
-        233,600
-    )
-)
-
-#Target 7
-targets[6].rect = targets[6].surf.get_rect(
-    midleft=(
-        0,600 - 166
-    )
-)
-
-#Target 8
-targets[7].rect = targets[7].surf.get_rect(
-    midleft=(
-        0,166
-    )
-)
+addTarget(0, SCREEN_HEIGHT - (SCREEN_HEIGHT - RECTANGLE_LONG_SIDE * 2)/3 - RECTANGLE_LONG_SIDE, RECTANGLE_SHORT_SIDE, RECTANGLE_LONG_SIDE)
+addTarget(0, (SCREEN_HEIGHT - RECTANGLE_LONG_SIDE * 2)/3, RECTANGLE_SHORT_SIDE, RECTANGLE_LONG_SIDE)
 
 # Move the sprite based on user keypresses
-#Below are the indices correlating to the keys in the pressed_keys array
-#K_UP = 82
-#K_DOWN = 81
-#K_LEFT = 80
-#K_RIGHT = 79
+#Currently the horizontal and vertical parameters are set to zero, but these go into the 'self.rect.move_ip()'
 def update(self, horizontal=0, vertical=0):
     if pressed_keys[K_UP]:
         self.rect.move_ip(0, -5)
-        #print('up')
     if pressed_keys[K_DOWN]:
         self.rect.move_ip(0, 5)
-        #print('down')
     if pressed_keys[K_LEFT]:
         self.rect.move_ip(-5, 0)
-        #print('left')
     if pressed_keys[K_RIGHT]:
         self.rect.move_ip(5, 0)
-        #print('right')
-
     # self.rect.move_ip(horizontal, vertical)
 
  # Keep player on the screen
@@ -166,6 +119,20 @@ def flashing(target):
         pygame.display.update(target_displayed)
         pygame.time.delay(250)
 
+player = Player()
+player.surf = pygame.Surface((0,0))
+target_displayed = Target()
+
+#Function to play the game and display stuff
+def game():
+    screen.fill((255,255,255))
+    pygame.display.flip()
+    pygame.time.delay(1000)
+    target_displayed = playScreen()
+    screen.blit(target_displayed.surf, target_displayed.rect)
+    pygame.display.update(target_displayed)
+    pygame.time.delay(1000)
+    player = Player()
 
 #Creating events for GUI
 PLAYGAME = pygame.USEREVENT + 0
@@ -174,11 +141,12 @@ pygame.time.set_timer(PLAYGAME, 10000)
 screen.fill((255,255,255))
 pygame.display.flip()
 pygame.time.delay(1000)
-target_displayed = targets[random.randint(0,7)]
+target_displayed = playScreen()
 screen.blit(target_displayed.surf, target_displayed.rect)
 pygame.display.update(target_displayed)
 pygame.time.delay(1000)
 player = Player()
+
 #Make the game slower
 clock = pygame.time.Clock()
 
@@ -198,15 +166,7 @@ while running:
             running = False
         
         if event.type == PLAYGAME:
-            screen.fill((255,255,255))
-            pygame.display.flip()
-            pygame.time.delay(1000)
-            target_displayed = playScreen()
-            screen.blit(target_displayed.surf, target_displayed.rect)
-            pygame.display.update(target_displayed)
-            
-            pygame.time.delay(1000)
-            player = Player()
+            game()
             
             
             
