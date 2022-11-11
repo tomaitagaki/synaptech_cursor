@@ -17,7 +17,7 @@ class BrainData:
 
         # TODO: window can't be processed in PSD if 400ms (100 samples)
         # self.window = int(window_ms / 1000 * self.sampling_rate)
-        self.window = 1000
+        self.window = 500
 
     def __get_recent_data(self):
         # Get data from brainflow

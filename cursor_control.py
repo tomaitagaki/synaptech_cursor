@@ -9,6 +9,7 @@ from pygame_view import PyGameView
 from get_brain_data import BrainData
 from hardware_interface import HeadSet
 from band_config import Band
+import numpy as np
 
 
 def main():
@@ -51,13 +52,29 @@ def main():
     #     time.sleep(2) # time in between trials
         # interface.restart()
 
+    # keep track for b-value
+    past_mu_3 = []
+    past_mu_4 = []
+    past_beta_3 = []
+    past_beta_4 = []
+
     counter = 0
     print('mu_r', 'be_r', 'mu_l', 'be_l') # r refers to right electrode
     while counter < 200:
         counter += 1
         features = brain_data.get_features()
+        past_mu_3.append(features[0][0])
+        past_mu_4.append(features[0][1])
+        past_beta_3.append(features[1][0])
+        past_beta_4.append(features[1][1])
         print(features[0][0], features[0][1], features[1][0], features[1][1])
         time.sleep(0.05)
+
+# use to average "past voltages" for b values in decoder
+def get_b_values(mu_3, mu_4, beta_3, beta_4):
+    b_mu = np.mean([np.mean(mu_3), np.mean(mu_4)])
+    b_beta = np.mean([np.mean(beta_3), np.mean(beta_4)])
+    return b_mu, b_beta
 
 if __name__ == "__main__":
     main()

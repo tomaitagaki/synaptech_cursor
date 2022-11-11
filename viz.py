@@ -42,11 +42,12 @@ def parse_csv(filename):
 # left = parse_txt('left_arm_up.txt')
 # right = parse_txt('right_arm_up.txt')
 
-neutral = parse_csv('initial_data/neutral2.csv')
-left = parse_csv('initial_data/left_down.csv')
-right = parse_csv('initial_data/right_down.csv')
+# neutral = parse_csv('initial_data/neutral2.csv')
+# left = parse_csv('initial_data/left_down.csv')
+# right = parse_csv('initial_data/right_down.csv')
 
-
+neutral = parse_csv('tommy_neut_0.csv')
+left = parse_csv('tommy_left_0.csv')
 
 # plot single stream
 # plt.figure()
@@ -62,25 +63,25 @@ right = parse_csv('initial_data/right_down.csv')
 plt.figure()
 plt.plot(neutral[0][25:], label='n')
 plt.plot(left[0][25:], label='l')
-plt.plot(right[0][25:], label='r')
+# plt.plot(right[0][25:], label='r')
 plt.legend()
 plt.show()
 
 plt.figure()
 plt.plot(neutral[1][25:], label='n')
 plt.plot(left[1][25:], label='l')
-plt.plot(right[1][25:], label='r')
+# plt.plot(right[1][25:], label='r')
 plt.legend()
 plt.show()
 
 plt.figure()
 plt.plot(neutral[2][25:], label='n')
 plt.plot(left[2][25:], label='l')
-plt.plot(right[2][25:], label='r')
+# plt.plot(right[2][25:], label='r')
 plt.show()
 
 plt.figure()
 plt.plot(neutral[3][25:], label='n')
 plt.plot(left[3][25:], label='l')
-plt.plot(right[3][25:], label='r')
+# plt.plot(right[3][25:], label='r')
 plt.show()
